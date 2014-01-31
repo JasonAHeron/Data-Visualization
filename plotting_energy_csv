@@ -1,0 +1,100 @@
+#population from http://esa.un.org/wpp/Excel-Data/population.htm
+
+
+require(ggplot2)
+
+#read in GDP data
+gdp <- read.csv("~/Documents/UCSC/CS198/GDP_DATA.csv", header=T, stringsAsFactors=F)
+
+#convert to numeric
+for(i in 2:ncol(gdp)){gdp[,i] <- as.numeric(gdp[,i])}
+
+#read in merged data
+gdp_merge_energy_per <-read.csv("~/Documents/UCSC/CS198/GDP_MERGE_ENERGY_PER.csv", header=T, stringsAsFactors=F)
+
+#convert to numeric
+for(i in 2:ncol(gdp_merge_energy_per)){gdp_merge_energy_per[,i] <- as.numeric(gdp_merge_energy_per[,i])}
+
+#read in merged data
+gdp_merge_energy <-read.csv("~/Documents/UCSC/CS198/GDP_MERGE_ENERGY.csv", header=T, stringsAsFactors=F)
+
+#convert to numeric
+for(i in 2:ncol(gdp_merge_energy)){gdp_merge_energy[,i] <- as.numeric(gdp_merge_energy[,i])}
+
+
+
+#########################energy use per capita
+##############data from eia.gov
+#read in data
+#epc <-read.csv("~/Documents/UCSC/CS198/Energy_Consumption_per_Capita_(Million_Btu_per_Person).csv", header=T, stringsAsFactors=F)
+
+#convert to numeric
+#for(i in 2:ncol(epc)){epc[,i] <- as.numeric(epc[,i])}
+
+#take reasonable subset resulting in 33 elements
+epc_subset <- subset(gdp_merge_energy_per,X2010 > 200)
+
+#plot1
+p1 <- ggplot(epc_subset, aes(x=reorder(Country, -X2010),y=X2010)) + geom_bar(stat="identity") + geom_text(aes(label=round(X2010,0)),hjust=1.1,size=4,angle=90,color="white") + theme_bw() + theme(axis.text.x = element_text(angle=60,hjust=1)) + xlab("Countries") + ylab("Energy use per capita - Million BTU / Person") + ggtitle("Countries with EUPC above 200MBTU/Person in year 2010")
+
+#########################total energy use
+##############data from eia.gov
+#read in data
+#teu <-read.csv("~/Documents/UCSC/CS198/Energy_Consumption_(Quadrillion_Btu).csv", header=T, stringsAsFactors=F)
+
+#convert to numeric
+#for(i in 2:ncol(teu)){teu[,i] <- as.numeric(teu[,i])}
+
+#take reasonable subset resulting in 33 elements
+teu_subset <- subset(gdp_merge_energy,X2010 > 4)
+
+#plot2
+p2 <- ggplot(teu_subset, aes(x=reorder(Country, -X2010),y=X2010)) + geom_bar(stat="identity") + geom_text(aes(label=round(X2010,0)),vjust=-0.3,size=4,angle=0,color="red") + theme_bw() + theme(axis.text.x = element_text(angle=60,hjust=1)) + xlab("Countries") + ylab("Total Energy Use - Quadrillion BTU") + ggtitle("Countries with TEU above 4QBTU in year 2010")
+
+#########################multiplot (http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/)
+
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  require(grid)
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
+#plot graphs
+multiplot(p1,p2)
+
+
+##testing
+##canada
+#boxplot(gdp[35,2:ncol(gdp)])
+#require(reshape2)
+#View(melt(gdp,id.vars="Country.Name", measure.vars=c("X2000","X2001","X2002","X2003","X2004","X2005","X2006","X2007","X2008","X2009","X2010","X2011","X2012"), variable.name="year", value.name="gdp_val"))
