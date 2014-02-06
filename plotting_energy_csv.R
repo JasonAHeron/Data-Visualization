@@ -26,26 +26,39 @@ require(ggplot2)
 ######################### simple energy use per capita
 #take reasonable simple subset resulting in 33 elements
 epc_simple_subset <- subset(merge_per,X2010 > 200)
-#plot1
+#plot0
 p0 <- ggplot(epc_simple_subset, aes(x=reorder(Country, -X2010),y=X2010)) + geom_bar(stat="identity") + geom_text(aes(label=round(X2010,0)),hjust=1.1,size=4,angle=90,color="white") + theme_bw() + theme(axis.text.x = element_text(angle=60,hjust=1)) + xlab("Countries") + ylab("Energy use per capita - Million BTU / Person") + ggtitle("Countries with EUPC above 200MBTU/Person in year 2010")
 
 ######################### energy use per capita subset by population
 #take reasonable subset by population resulting in 33 elements
 epc_pop_subset <- subset(merge_per,POP2010 > 32000)
 #plot1
-p1 <- ggplot(epc_pop_subset, aes(x=reorder(Country, -X2010),y=X2010)) + geom_bar(stat="identity") + geom_text(aes(label=round(X2010,0)),vjust=-0.3,size=4,angle=0,color="red") + theme_bw() + theme(axis.text.x = element_text(angle=60,hjust=1)) + xlab("Countries") + ylab("Energy use per capita - Million BTU / Person") + ggtitle("Countries population above 32000000 ordered MBTU/Person in year 2010")
+p1 <- ggplot(epc_pop_subset, aes(x=reorder(Country, -X2010),y=X2010)) + geom_bar(stat="identity") + geom_text(aes(label=round(X2010,0)),vjust=-0.3,size=4,angle=0,color="black") + theme_bw() + theme(axis.text.x = element_text(angle=60,hjust=1)) + xlab("Countries") + ylab("Energy use per capita - Million BTU / Person") + ggtitle("Countries with population above 32000000 ordered MBTU/Person in year 2010")
+
+######################### energy use per capita subset by GDP
+#take reasonable subset by GDP resulting in 33 elements
+epc_gdp_subset <- subset(merge_per,GDP2010 > 300000000000)
+#plot1
+p2 <- ggplot(epc_gdp_subset, aes(x=reorder(Country, -X2010),y=X2010)) + geom_bar(stat="identity") + geom_text(aes(label=round(X2010,0)),vjust=-0.3,size=4,angle=0,color="black") + theme_bw() + theme(axis.text.x = element_text(angle=60,hjust=1)) + xlab("Countries") + ylab("Energy use per capita - Million BTU / Person") + ggtitle("Countries with GDP above 300000000000 ordered MBTU/Person in year 2010")
 
 ######################### simple total energy use
-#take reasonable subset resulting in 33 elements
+#take reasonable simple subset resulting in 33 elements
 teu_simple_subset <- subset(merge_total,X2010 > 4)
 #plot2
-p2 <- ggplot(teu_simple_subset, aes(x=reorder(Country, -X2010),y=X2010)) + geom_bar(stat="identity") + geom_text(aes(label=round(X2010,0)),vjust=-0.3,size=4,angle=0,color="red") + theme_bw() + theme(axis.text.x = element_text(angle=60,hjust=1)) + xlab("Countries") + ylab("Total Energy Use - Quadrillion BTU") + ggtitle("Countries with TEU above 4QBTU in year 2010")
+p3 <- ggplot(teu_simple_subset, aes(x=reorder(Country, -X2010),y=X2010)) + geom_bar(stat="identity") + geom_text(aes(label=round(X2010,0)),vjust=-0.3,size=4,angle=0,color="black") + theme_bw() + theme(axis.text.x = element_text(angle=60,hjust=1)) + xlab("Countries") + ylab("Total Energy Use - Quadrillion BTU") + ggtitle("Countries with TEU above 4QBTU in year 2010")
 
 ######################### total energy use subset by population
-#take subset by population resulting in 33 elements
+#take reasonable subset by population resulting in 33 elements
 teu_pop_subset <- subset(merge_total,POP2010 > 32000)
 #plot 3
-p3 <- ggplot(teu_pop_subset, aes(x=reorder(Country, -X2010),y=X2010)) + geom_bar(stat="identity") + geom_text(aes(label=round(X2010,0)),vjust=-0.3,size=4,angle=0,color="red") + theme_bw() + theme(axis.text.x = element_text(angle=60,hjust=1)) + xlab("Countries") + ylab("Total Energy Use - Quadrillion BTU") + ggtitle("Countries with population above 32000000 ordered by TEU in year 2010")
+p4 <- ggplot(teu_pop_subset, aes(x=reorder(Country, -X2010),y=X2010)) + geom_bar(stat="identity") + geom_text(aes(label=round(X2010,0)),vjust=-0.3,size=4,angle=0,color="black") + theme_bw() + theme(axis.text.x = element_text(angle=60,hjust=1)) + xlab("Countries") + ylab("Total Energy Use - Quadrillion BTU") + ggtitle("Countries with population above 32000000 ordered by TEU in year 2010")
+
+######################### total energy use subset by GDP
+#take reasonable subset by GDP resulting in 33 elements
+teu_gdp_subset <- subset(merge_total,GDP2010 > 315000000000)
+#plot 3
+p5 <- ggplot(teu_gdp_subset, aes(x=reorder(Country, -X2010),y=X2010)) + geom_bar(stat="identity") + geom_text(aes(label=round(X2010,0)),vjust=-0.3,size=4,angle=0,color="black") + theme_bw() + theme(axis.text.x = element_text(angle=60,hjust=1)) + xlab("Countries") + ylab("Total Energy Use - Quadrillion BTU") + ggtitle("Countries with GDP above 315000000000 ordered by TEU in year 2010")
+
 
 ######################### multiplot (http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/)
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
@@ -85,7 +98,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 }
 
 #plot graphs
-multiplot(p1,p2)
+multiplot(p0,p1,p2,p3,p4,p5, cols=2)
 
 
 ##testing
