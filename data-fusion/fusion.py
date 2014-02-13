@@ -8,6 +8,7 @@ import sys
 DEBUG = False
 HEADER_SEARCH = True
 FUZZY_MATCHING = True
+MULTIMERGE = (10) + 1
 
 def main(argv):
     try:
@@ -42,11 +43,14 @@ def mergeCSV(c1, c2, outfile, field_name):
         for csv2_row in csv2_rows:
             output_row = csv1_row
             if first_pass:
-                output_row = output_row + [str(field_name)]
+                output_row = output_row + [str(field_name) + item for item in (csv2_row[csv2_extract:csv2_extract+MULTIMERGE])]
+                match = True
+                break
             elif str(csv1_row[0]) == str(csv2_row[0]):
                 match = True
-                output_row.append(((csv2_row[csv2_extract].split('.'))[0]).replace(',', ''))
-        if (not first_pass) and (not match) and (FUZZY_MATCHING):
+                for data in csv2_row[csv2_extract:csv2_extract+MULTIMERGE]:
+                    output_row.append(data.split('.')[0].replace(',', ''))
+        if (not match) and (FUZZY_MATCHING):
             output_rows = []
             output_names = []
             fuzzy_match = False
@@ -54,7 +58,8 @@ def mergeCSV(c1, c2, outfile, field_name):
                 output_row = []
                 output_row.extend(csv1_row)
                 if (fuzz.partial_ratio(str(csv1_row[0]), str(csv2_row[0])) > 95) or (fuzz.partial_ratio(str(csv2_row[0]), str(csv1_row[0])) > 95):
-                    output_row.append(((csv2_row[csv2_extract].split('.'))[0]).replace(',', ''))
+                    for data in csv2_row[csv2_extract:csv2_extract+MULTIMERGE]:
+                        output_row.append(data.split('.')[0].replace(',', ''))
                     output_rows.append(output_row)
                     output_names.append(csv2_row[0])
                     fuzzy_match = True
@@ -72,6 +77,7 @@ def mergeCSV(c1, c2, outfile, field_name):
             print "failed to find " + csv1_row[0] + " in second csv file"
         output.writerow(output_row)
         first_pass = False
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])
