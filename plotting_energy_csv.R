@@ -163,9 +163,8 @@ country_teu_gdp2 <- NULL
 
 
 #potential plots
-p8 <- ggplot(data=country_epc_gdp, aes(x=EPC, y=GDP, color=Country, group=Year)) + geom_point()
-p9 <- ggplot(data=country_teu_gdp, aes(x=TEU, y=GDP, color=Country, group=Year)) + geom_point()
-
+p8 <- ggplot(data=country_epc_gdp, aes(x=GDP, y=EPC, color=Country, group=Country)) + geom_point() + stat_smooth(method=lm)
+p9 <- ggplot(data=country_teu_gdp, aes(x=GDP, y=TEU, group=Country, color=Country)) + geom_point() + stat_smooth(method=lm)
 
 ######################### multiplot (http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/)
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
