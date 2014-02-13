@@ -22,6 +22,8 @@ for(i in 2:ncol(merge_total)){merge_total[,i] <- as.numeric(merge_total[,i])}
 
 ######################### dependancies
 require(ggplot2)
+require(reshape2)
+require(grid)
 
 ######################### simple energy use per capita
 #take reasonable simple subset resulting in 33 elements
@@ -59,11 +61,29 @@ teu_gdp_subset <- subset(merge_total,GDP2010 > 315000000000)
 #plot 3
 p5 <- ggplot(teu_gdp_subset, aes(x=reorder(Country, -X2010),y=X2010)) + geom_bar(stat="identity") + geom_text(aes(label=round(X2010,0)),vjust=-0.3,size=4,angle=0,color="black") + theme_bw() + theme(axis.text.x = element_text(angle=60,hjust=1)) + xlab("Countries") + ylab("Total Energy Use - Quadrillion BTU") + ggtitle("Countries with GDP above 315000000000 ordered by TEU in year 2010")
 
+######################### line plots
+#using specified countries pull off merged data and melt into a format R can handle for line graphs
+#energy per capita
+country_epc <- (merge_per[merge_per$Country %in% c("Canada", "United States", "Russia", "Germany", "France", "Spain", "Italy", "Iran", "South Africa", "Ukraine", "Poland", "Argentina", "China", "Thailand", "Mexico", "Turkey", "Brazil", "Algeria", "Egypt", "Columbia", "Indonesia", "India", "Australia"),])
+country_epc$POP2010 <- NULL
+country_epc$GDP2010 <- NULL
+country_epc <- melt(country_epc, id.vars="Country", value.name="EPC", variable.name="Year")
+#plot 6
+p6 <- ggplot(data=country_epc, aes(x=Year, y=EPC, group = Country, colour = Country)) +
+    geom_line() +
+    geom_point( size=4, shape=21, fill="white")
+#total energy
+country_teu <- (merge_total[merge_total$Country %in% c("Canada", "United States", "Russia", "Germany", "France", "Spain", "Italy", "Iran", "South Africa", "Ukraine", "Poland", "Argentina", "China", "Thailand", "Mexico", "Turkey", "Brazil", "Algeria", "Egypt", "Columbia", "Indonesia", "India", "Australia"),])
+country_teu$POP2010 <- NULL
+country_teu$GDP2010 <- NULL
+country_teu <- melt(country_teu, id.vars="Country", value.name="TEU", variable.name="Year")
+#plot 7
+p7 <- ggplot(data=country_teu, aes(x=Year, y=TEU, group = Country, colour = Country)) +
+    geom_line() +
+    geom_point( size=4, shape=21, fill="white")
 
 ######################### multiplot (http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/)
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
-  require(grid)
-
   # Make a list from the ... arguments and plotlist
   plots <- c(list(...), plotlist)
 
@@ -98,11 +118,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 }
 
 #plot graphs
-multiplot(p0,p1,p2,p3,p4,p5, cols=2)
-
-
-##testing
-##canada
-#boxplot(gdp[35,2:ncol(gdp)])
-#require(reshape2)
-#View(melt(gdp,id.vars="Country.Name", measure.vars=c("X2000","X2001","X2002","X2003","X2004","X2005","X2006","X2007","X2008","X2009","X2010","X2011","X2012"), variable.name="year", value.name="gdp_val"))
+######################### bar graphs
+#multiplot(p0,p1,p2,p3,p4,p5, cols=2)
+######################### line graphs
+multiplot(p6,p7,cols=2)
