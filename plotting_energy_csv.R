@@ -3,22 +3,29 @@
 
 ######################### data importing and cleaning
 #read in GDP data
-gdp <- read.csv("~/Documents/UCSC/CS198/GDP_DATA.csv", header=T, stringsAsFactors=F)
+#gdp <- read.csv("~/Documents/UCSC/CS198/GDP_DATA.csv", header=T, stringsAsFactors=F)
 #read in population data
-pop <- read.csv("~/Documents/UCSC/CS198/POPULATION_DATA_THOUSANDS.csv", header=T, stringsAsFactors=F)
+#pop <- read.csv("~/Documents/UCSC/CS198/POPULATION_DATA_THOUSANDS.csv", header=T, stringsAsFactors=F)
 #read in merged data GDP + POP +EPC
 merge_per <-read.csv("~/Documents/UCSC/CS198/POP_GDP_MERGE_ENERGY_PER.csv", header=T, stringsAsFactors=F)
 #read in merged data GDP + POP + TEU
 merge_total <-read.csv("~/Documents/UCSC/CS198/POP_GDP_MERGE_ENERGY.csv", header=T, stringsAsFactors=F)
-
+#read in merged GDP (for 10 years) + EPC
+gdp_epc <-read.csv("~/Documents/UCSC/CS198/GDP10_MERGE_ENERGY_PER.csv", header=T, stringsAsFactors=F)
+#read in merged GDP (for 10 years) + TEU
+gdp_teu <-read.csv("~/Documents/UCSC/CS198/GDP10_MERGE_ENERGY.csv", header=T, stringsAsFactors=F)
 #convert raw GDP data to numeric
-for(i in 2:ncol(gdp)){gdp[,i] <- as.numeric(gdp[,i])}
+#for(i in 2:ncol(gdp)){gdp[,i] <- as.numeric(gdp[,i])}
 #convert raw population data to numeric
-for(i in 2:ncol(pop)){pop[,i] <- as.numeric(pop[,i])}
+#for(i in 2:ncol(pop)){pop[,i] <- as.numeric(pop[,i])}
 #convert fully merged GDP+POP+EPC to numeric
 for(i in 2:ncol(merge_per)){merge_per[,i] <- as.numeric(merge_per[,i])}
 #convert fully merged GDP+POP+TEU to numeric
 for(i in 2:ncol(merge_total)){merge_total[,i] <- as.numeric(merge_total[,i])}
+#convert GDP(10) + EPC to numeric
+for(i in 2:ncol(gdp_epc)){gdp_epc[,i] <- as.numeric(gdp_epc[,i])}
+#convert GDP(10) + TEU to numeric
+for(i in 2:ncol(gdp_teu)){gdp_teu[,i] <- as.numeric(gdp_teu[,i])}
 
 ######################### dependancies
 require(ggplot2)
@@ -82,6 +89,84 @@ p7 <- ggplot(data=country_teu, aes(x=Year, y=TEU, group = Country, colour = Coun
     geom_line() +
     geom_point( size=4, shape=21, fill="white")
 
+######################### scatter plots
+#using specified countries pull off merged data and melt into a format R can handle for line graphs
+#energy per capita
+country_epc_gdp_core <- (gdp_epc[gdp_epc$Country %in% c("Canada", "United States", "Russia", "Germany", "France", "Spain", "Italy", "Iran", "South Africa", "Ukraine", "Poland", "Argentina", "China", "Thailand", "Mexico", "Turkey", "Brazil", "Algeria", "Egypt", "Columbia", "Indonesia", "India", "Australia"),])
+country_epc_gdp <- country_epc_gdp_core
+country_epc_gdp2 <- country_epc_gdp_core
+#temporarily drop off gdp values so we can melt EPC
+country_epc_gdp$G2000 <- NULL
+country_epc_gdp$G2001 <- NULL
+country_epc_gdp$G2002 <- NULL
+country_epc_gdp$G2003 <- NULL
+country_epc_gdp$G2004 <- NULL
+country_epc_gdp$G2005 <- NULL
+country_epc_gdp$G2006 <- NULL
+country_epc_gdp$G2007 <- NULL
+country_epc_gdp$G2008 <- NULL
+country_epc_gdp$G2009 <- NULL
+country_epc_gdp$G2010 <- NULL
+country_epc_gdp <- melt(country_epc_gdp, id.vars="Country", value.name="EPC", variable.name="Year")
+#temporarily drop off EPC values so we can melt GDP
+country_epc_gdp2$X2000 <- NULL
+country_epc_gdp2$X2001 <- NULL
+country_epc_gdp2$X2002 <- NULL
+country_epc_gdp2$X2003 <- NULL
+country_epc_gdp2$X2004 <- NULL
+country_epc_gdp2$X2005 <- NULL
+country_epc_gdp2$X2006 <- NULL
+country_epc_gdp2$X2007 <- NULL
+country_epc_gdp2$X2008 <- NULL
+country_epc_gdp2$X2009 <- NULL
+country_epc_gdp2$X2010 <- NULL
+country_epc_gdp2 <- melt(country_epc_gdp2, id.vars="Country", value.name="GDP", variable.name="Year")
+#pull stuff back together post melt
+country_epc_gdp$GDP <- (country_epc_gdp2[country_epc_gdp2$Country %in% c("Canada", "United States", "Russia", "Germany", "France", "Spain", "Italy", "Iran", "South Africa", "Ukraine", "Poland", "Argentina", "China", "Thailand", "Mexico", "Turkey", "Brazil", "Algeria", "Egypt", "Columbia", "Indonesia", "India", "Australia"),3])
+country_epc_gdp2 <- NULL
+#country_epc_gdp_core <- NULL
+
+#total energy use
+country_teu_gdp_core <- (gdp_teu[gdp_teu$Country %in% c("Canada", "United States", "Russia", "Germany", "France", "Spain", "Italy", "Iran", "South Africa", "Ukraine", "Poland", "Argentina", "China", "Thailand", "Mexico", "Turkey", "Brazil", "Algeria", "Egypt", "Columbia", "Indonesia", "India", "Australia"),])
+country_teu_gdp <- country_teu_gdp_core
+country_teu_gdp2 <- country_teu_gdp_core
+#temporarily drop off GDP values so we can melt TEU
+country_teu_gdp$G2000 <- NULL
+country_teu_gdp$G2001 <- NULL
+country_teu_gdp$G2002 <- NULL
+country_teu_gdp$G2003 <- NULL
+country_teu_gdp$G2004 <- NULL
+country_teu_gdp$G2005 <- NULL
+country_teu_gdp$G2006 <- NULL
+country_teu_gdp$G2007 <- NULL
+country_teu_gdp$G2008 <- NULL
+country_teu_gdp$G2009 <- NULL
+country_teu_gdp$G2010 <- NULL
+country_teu_gdp <- melt(country_teu_gdp, id.vars="Country", value.name="TEU", variable.name="Year")
+#temporarily drop off TEU values so we can melt GDP
+country_teu_gdp2$X2000 <- NULL
+country_teu_gdp2$X2001 <- NULL
+country_teu_gdp2$X2002 <- NULL
+country_teu_gdp2$X2003 <- NULL
+country_teu_gdp2$X2004 <- NULL
+country_teu_gdp2$X2005 <- NULL
+country_teu_gdp2$X2006 <- NULL
+country_teu_gdp2$X2007 <- NULL
+country_teu_gdp2$X2008 <- NULL
+country_teu_gdp2$X2009 <- NULL
+country_teu_gdp2$X2010 <- NULL
+country_teu_gdp2 <- melt(country_teu_gdp2, id.vars="Country", value.name="GDP", variable.name="Year")
+#pull stuff back together post melt
+country_teu_gdp$GDP <- (country_teu_gdp2[country_teu_gdp2$Country %in% c("Canada", "United States", "Russia", "Germany", "France", "Spain", "Italy", "Iran", "South Africa", "Ukraine", "Poland", "Argentina", "China", "Thailand", "Mexico", "Turkey", "Brazil", "Algeria", "Egypt", "Columbia", "Indonesia", "India", "Australia"),3])
+country_teu_gdp2 <- NULL
+#country_teu_gdp_core <- NULL
+
+
+#potential plots
+p8 <- ggplot(data=country_epc_gdp, aes(x=EPC, y=GDP, color=Country, group=Year)) + geom_point()
+p9 <- ggplot(data=country_teu_gdp, aes(x=TEU, y=GDP, color=Country, group=Year)) + geom_point()
+
+
 ######################### multiplot (http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/)
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   # Make a list from the ... arguments and plotlist
@@ -121,4 +206,4 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 ######################### bar graphs
 #multiplot(p0,p1,p2,p3,p4,p5, cols=2)
 ######################### line graphs
-multiplot(p6,p7,cols=2)
+multiplot(p6,p8,p7,p9,cols=2)
