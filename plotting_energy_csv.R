@@ -74,6 +74,8 @@ p5 <- ggplot(teu_gdp_subset, aes(x=reorder(Country, -X2010),y=X2010)) + geom_bar
 country_epc <- (merge_per[merge_per$Country %in% c("Canada", "United States", "Russia", "Germany", "France", "Spain", "Italy", "Iran", "South Africa", "Ukraine", "Poland", "Argentina", "China", "Thailand", "Mexico", "Turkey", "Brazil", "Algeria", "Egypt", "Columbia", "Indonesia", "India", "Australia"),])
 country_epc$POP2010 <- NULL
 country_epc$GDP2010 <- NULL
+#y1-y2/x1-x2
+#country_epc = subset(country_epc, (X2000-X2001)/-1 > .05)
 country_epc <- melt(country_epc, id.vars="Country", value.name="EPC", variable.name="Year")
 #plot 6
 p6 <- ggplot(data=country_epc, aes(x=Year, y=EPC, group = Country, colour = Country)) +
