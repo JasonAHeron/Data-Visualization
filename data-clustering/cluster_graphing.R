@@ -7,27 +7,27 @@ TEU_3_means <- read.csv("~/Documents/UCSC/CS198/data-clustering/TEU_3_means.csv"
 TEU_3_means <- melt(TEU_3_means, id.vars="Trends", value.name="TEU", variable.name="Year")
 p1 <- ggplot(data=TEU_3_means, aes(x=Year, y=TEU, group = Trends, colour = Trends)) +
     geom_line() +
-    geom_point( size=4, shape=21, fill="white")
+    geom_point( size=4, shape=21, fill="white") + ggtitle("Total Energy k=3 clustering")
 
 
 TEU_5_means <- read.csv("~/Documents/UCSC/CS198/data-clustering/TEU_5_means.csv")
 TEU_5_means <- melt(TEU_5_means, id.vars="Trends", value.name="TEU", variable.name="Year")
 p2 <- ggplot(data=TEU_5_means, aes(x=Year, y=TEU, group = Trends, colour = Trends)) +
     geom_line() +
-    geom_point( size=4, shape=21, fill="white")
+    geom_point( size=4, shape=21, fill="white") + ggtitle("Total Energy k=5 clustering")
 
 EPC_5_means <- read.csv("~/Documents/UCSC/CS198/data-clustering/EPC_5_means.csv")
 EPC_5_means <- melt(EPC_5_means, id.vars="Trends", value.name="EPC", variable.name="Year")
 p4 <- ggplot(data=EPC_5_means, aes(x=Year, y=EPC, group = Trends, colour = Trends)) +
     geom_line() +
-    geom_point( size=4, shape=21, fill="white")
+    geom_point( size=4, shape=21, fill="white") + ggtitle("Energy Usage Per Capita k=5 clustering")
 
 
 EPC_3_means <- read.csv("~/Documents/UCSC/CS198/data-clustering/EPC_3_means.csv")
 EPC_3_means <- melt(EPC_3_means, id.vars="Trends", value.name="EPC", variable.name="Year")
 p3 <- ggplot(data=EPC_3_means, aes(x=Year, y=EPC, group = Trends, colour = Trends)) +
     geom_line() +
-    geom_point( size=4, shape=21, fill="white")
+    geom_point( size=4, shape=21, fill="white") + ggtitle("Energy Usage Per Capita k=3 clustering")
 
 
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
