@@ -208,34 +208,3 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 #multiplot(p0,p1,p2,p3,p4,p5, cols=2)
 ######################### line graphs
 multiplot(p6,p8,p7,p9,cols=2)
-
-
-
-
-
-
-
-
-##clustering
-library(reshape2)
-library(ggplot2)
-library(grid)
-
-out2 <- read.csv("~/Documents/UCSC/CS198/data-clustering/3means.csv", header=F)
-
-out <- melt(out2, id.vars="V1", value.name="TEU", variable.name="Year")
-
-p1 <- ggplot(data=out, aes(x=Year, y=TEU, group = V1, colour = V1)) +
-    geom_line() +
-    geom_point( size=4, shape=21, fill="white")
-
-
-out2 <- read.csv("~/Documents/UCSC/CS198/data-clustering/5means.csv", header=F)
-
-out <- melt(out2, id.vars="V1", value.name="TEU", variable.name="Year")
-
-p2 <- ggplot(data=out, aes(x=Year, y=TEU, group = V1, colour = V1)) +
-    geom_line() +
-    geom_point( size=4, shape=21, fill="white")
-
-multiplot(p1,p2)
