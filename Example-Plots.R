@@ -3,8 +3,8 @@ require(ggplot2)
 
 #read in merged GDP (for 10 years) + EPC
 #replace <PATH TO> with your path
-data <- read.csv("/Users/jason/Documents/UCSC/CS198/POP_GDP_MERGE_ENERGY_PER.csv", header=T, stringsAsFactors=F)
-gdp_epc <- read.csv("/Users/jason/Documents/UCSC/CS198/GDP10_MERGE_ENERGY_PER.csv", header=T, stringsAsFactors=F)
+data <- read.csv("/Users/jason/Documents/UCSC/CS198/POP_GDP_MERGE_ENERGY_PER.csv", header=T, stringsAsFactors=F, na.strings=c("NA","--"))
+gdp_epc <- read.csv("/Users/jason/Documents/UCSC/CS198/GDP10_MERGE_ENERGY_PER.csv", header=T, stringsAsFactors=F, na.strings=c("NA","--"))
 
 #convert to numeric
 for(i in 2:ncol(data)){data[,i] <- as.numeric(data[,i])}
